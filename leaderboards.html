@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swimming Statistics Tracking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2a3b4c;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .login-btn {
+            background-color: #4cd4ca;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        main {
+            background-color: #2a7da1;
+            background-image: linear-gradient(to right, #2a7da1, #1a5a7a);
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .hero {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        
+        .hero-content {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .hero-content p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            padding: 2.5%;
+        }
+
+        #hero-image {
+            height: 200px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: rgba(30, 60, 80, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #4cd4ca;
+        }
+        
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .progress-circle svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .progress-circle .number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .chart-container {
+            height: 150px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .time-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .bottom-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .stat-item {
+            background-color: rgba(20, 40, 60, 0.5);
+            border-radius: 20px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-item .label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4cd4ca;
+        }
+        
+        .data-list {
+            margin-top: 10px;
+        }
+        
+        .data-list .data-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .data-list .data-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4cd4ca;
+            margin-right: 5px;
+        }
+        
+        .icon-btn {
+            background-color: rgba(20, 40, 60, 0.5);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: white;
+            margin: 0 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li class="logo">
+                        <a href="index.html">Home</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul>
+                    <!-- <li><a href="#">Home</a></li> -->
+                    <li><a href="https://askersvom.no/klubbrekorder/" target="_blank">Klubbrekorder</a></li>
+                    <li><a href="leaderboards.html">Leaderboards</a></li>
+                    <li><a href="https://medley.no/terminliste.aspx?klubbid=5" target="_blank">Stevner</a></li>
+                    <li><a href="#">Treningsdagbok</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+            <button class="login-btn">LOGIN</button>
+        </header>
+        
+        <main>
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Leaderboards</h1>
+                    <p>Immerse yourself in the aquatic world, track your swimming performance, elevate your technique, and embrace the joy of swimming.</p>
+                </div>
+                <div class="hero-image">
+                    <img src="images/ask_logo.png" alt="Asker SK Logo" id="hero-image">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Function to update time data
+        function updateTime() {
+            // In a real implementation, this would fetch data from an API
+            // For now, we'll just simulate with static data
+            console.log("Time data updated");
+        }
+        
+        // Function to update the progress circle
+        function updateProgressCircle(percentage, elementId) {
+            const circumference = 2 * Math.PI * 15.9155;
+            const dashoffset = circumference - (percentage / 100) * circumference;
+            
+            // In a real implementation, we would select the element and update it
+            console.log(`Updated progress circle ${elementId} to ${percentage}%`);
+        }
+        
+        // Initialize the charts (in a real implementation, we'd use a library like Chart.js)
+        function initCharts() {
+            // This would initialize our charts with real data
+            console.log("Charts initialized");
+        }
+        
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            updateProgressCircle(75, 'mainProgress');
+            updateProgressCircle(80, 'secondaryProgress');
+            initCharts();
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.icon-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('Button clicked');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
