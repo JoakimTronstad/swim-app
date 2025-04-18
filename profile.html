@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Swimming Statistics Tracking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2a3b4c;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4cd4ca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        
+        main {
+            background-color: #2a7da1;
+            background-image: linear-gradient(to right, #2a7da1, #1a5a7a);
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .hero {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        
+        .hero-content {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .hero-content p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .profile-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .profile-sidebar {
+            flex: 1;
+            background-color: rgba(30, 60, 80, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 300px;
+        }
+        
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #4cd4ca;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+        }
+        
+        .profile-info {
+            text-align: center;
+        }
+        
+        .profile-info h2 {
+            margin-bottom: 10px;
+        }
+        
+        .profile-info p {
+            color: #4cd4ca;
+            margin-bottom: 5px;
+        }
+
+        .profile-info .joined-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .profile-actions button {
+            background-color: rgba(20, 40, 60, 0.5);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        
+        .profile-actions button:hover {
+            background-color: rgba(30, 50, 70, 0.5);
+        }
+        
+        .profile-content {
+            flex: 3;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: rgba(30, 60, 80, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .stat-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #4cd4ca;
+        }
+        
+        .stat-card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .stat-chart {
+            width: 100px;
+            height: 50px;
+        }
+        
+        .time-records {
+            background-color: rgba(30, 60, 80, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .time-records h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #4cd4ca;
+        }
+        
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .records-table th, .records-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .records-table th {
+            color: #4cd4ca;
+        }
+        
+        .logout-btn {
+            margin-top: 20px;
+            background-color: #4cd4ca;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .logout-btn:hover {
+            background-color: #3bc0b6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li class="logo">
+                        <a href="index.html">Home</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul>
+                    <li><a href="https://askersvom.no/klubbrekorder/" target="_blank">Klubbrekorder</a></li>
+                    <li><a href="leaderboards.html">Leaderboards</a></li>
+                    <li><a href="https://medley.no/terminliste.aspx?klubbid=5" target="_blank">Stevner</a></li>
+                    <li><a href="#">Treningsdagbok</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+            <div id="authContainer">
+                <a href="profile.html" class="profile-icon" id="profileIcon">JS</a>
+            </div>
+        </header>
+        
+        <main>
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>My Profile</h1>
+                    <p>View and manage your swimming statistics, personal records, and training progress.</p>
+                </div>
+            </div>
+            
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-picture" id="profilePicture">JS</div>
+                    <div class="profile-info">
+                        <h2 id="userName">John Swimmer</h2>
+                        <p id="userEmail">john@example.com</p>
+                        <p id="userDob" class="user-dob">Born: January 1, 2000</p>
+                        <p id="joinedDate" class="joined-date">Member since: Apr 17, 2025</p>
+                    </div>
+                    <div class="profile-actions">
+                        <button>Edit Profile</button>
+                        <button>Settings</button>
+                        <button>Notifications</button>
+                        <button id="logoutBtn" class="logout-btn">Logout</button>
+                    </div>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>Total Competitions</h3>
+                            <div class="stat-card-content">
+                                <div class="stat-number">12</div>
+                                <svg class="stat-chart" viewBox="0 0 100 50">
+                                    <path d="M0,40 L10,35 L20,30 L30,25 L40,30 L50,20 L60,15 L70,10 L80,20 L90,5 L100,15" 
+                                          fill="none" 
+                                          stroke="#4cd4ca" 
+                                          stroke-width="2" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Personal Records</h3>
+                            <div class="stat-card-content">
+                                <div class="stat-number">8</div>
+                                <svg class="stat-chart" viewBox="0 0 100 50">
+                                    <path d="M0,40 L10,40 L20,40 L30,40 L40,30 L50,30 L60,30 L70,20 L80,20 L90,10 L100,10" 
+                                          fill="none" 
+                                          stroke="#4cd4ca" 
+                                          stroke-width="2" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Weekly Distance (km)</h3>
+                            <div class="stat-card-content">
+                                <div class="stat-number">15.2</div>
+                                <svg class="stat-chart" viewBox="0 0 100 50">
+                                    <path d="M0,30 L10,25 L20,35 L30,30 L40,20 L50,25 L60,15 L70,20 L80,10 L90,15 L100,5" 
+                                          fill="none" 
+                                          stroke="#4cd4ca" 
+                                          stroke-width="2" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Improvement Rate</h3>
+                            <div class="stat-card-content">
+                                <div class="stat-number">6.2%</div>
+                                <svg class="stat-chart" viewBox="0 0 100 50">
+                                    <path d="M0,45 L10,40 L20,35 L30,38 L40,30 L50,28 L60,25 L70,20 L80,15 L90,10 L100,5" 
+                                          fill="none" 
+                                          stroke="#4cd4ca" 
+                                          stroke-width="2" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-records">
+                        <h3>My Personal Records</h3>
+                        <table class="records-table">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Time</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>50m Freestyle</td>
+                                    <td>00:27.85</td>
+                                    <td>12/03/2023</td>
+                                    <td>Asker Open</td>
+                                </tr>
+                                <tr>
+                                    <td>100m Freestyle</td>
+                                    <td>00:58.42</td>
+                                    <td>15/04/2023</td>
+                                    <td>Regional Finals</td>
+                                </tr>
+                                <tr>
+                                    <td>200m Freestyle</td>
+                                    <td>02:10.18</td>
+                                    <td>22/05/2023</td>
+                                    <td>National Qualifiers</td>
+                                </tr>
+                                <tr>
+                                    <td>50m Butterfly</td>
+                                    <td>00:31.24</td>
+                                    <td>08/06/2023</td>
+                                    <td>Summer Championships</td>
+                                </tr>
+                                <tr>
+                                    <td>100m Butterfly</td>
+                                    <td>01:08.75</td>
+                                    <td>14/07/2023</td>
+                                    <td>Asker GP</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get logged in user's email
+            const userEmail = getUserEmail();
+            
+            if (userEmail) {
+                // Try to get user data from database
+                if (typeof getUserByEmail === 'function') {
+                    getUserByEmail(userEmail)
+                        .then(userData => {
+                            if (userData) {
+                                updateProfileWithUserData(userData);
+                            } else {
+                                // Fallback to basic info if user not found in database
+                                updateProfileWithBasicInfo();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error);
+                            updateProfileWithBasicInfo();
+                        });
+                } else {
+                    // Database not available, use basic info
+                    updateProfileWithBasicInfo();
+                }
+            }
+        });
+        
+        // Update profile with full user data from database
+        function updateProfileWithUserData(userData) {
+            // Update profile information
+            const nameElement = document.getElementById('userName');
+            const emailElement = document.getElementById('userEmail');
+            const dobElement = document.getElementById('userDob');
+            const joinedDateElement = document.getElementById('joinedDate');
+            const profilePicture = document.getElementById('profilePicture');
+            
+            if (nameElement) {
+                nameElement.textContent = `${userData.firstName} ${userData.lastName}`;
+            }
+            
+            if (emailElement) {
+                emailElement.textContent = userData.email;
+            }
+            
+            if (dobElement && userData.dob) {
+                // Format date of birth
+                const dobDate = new Date(userData.dob);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                dobElement.textContent = `Born: ${dobDate.toLocaleDateString('en-US', options)}`;
+            }
+            
+            if (joinedDateElement && userData.registrationDate) {
+                // Format registration date
+                const regDate = new Date(userData.registrationDate);
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                joinedDateElement.textContent = `Member since: ${regDate.toLocaleDateString('en-US', options)}`;
+            }
+            
+            if (profilePicture) {
+                // Set initial based on first name
+                profilePicture.textContent = userData.firstName.charAt(0).toUpperCase();
+            }
+        }
+        
+        // Update profile with basic info from localStorage
+        function updateProfileWithBasicInfo() {
+            const userName = getUserName();
+            const userEmail = getUserEmail();
+            
+            const nameElement = document.getElementById('userName');
+            const emailElement = document.getElementById('userEmail');
+            const profilePicture = document.getElementById('profilePicture');
+            
+            if (nameElement && userName) {
+                nameElement.textContent = userName;
+            }
+            
+            if (emailElement && userEmail) {
+                emailElement.textContent = userEmail;
+            }
+            
+            if (profilePicture) {
+                profilePicture.textContent = getUserInitial();
+            }
+        }
+    </script>
+</body>
+</html>
