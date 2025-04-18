@@ -65,6 +65,22 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4cd4ca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
         }
         
         main {
@@ -248,7 +264,10 @@
                     <li><a href="#">Settings</a></li>
                 </ul>
             </nav>
-            <button class="login-btn">LOGIN</button>
+            <div id="authContainer">
+                <!-- This will be replaced with either the login button or profile icon via JavaScript -->
+                <a href="login.html" class="login-btn">LOGIN</a>
+            </div>
         </header>
         
         <main>
@@ -264,6 +283,7 @@
         </main>
     </div>
 
+    <script src="auth.js"></script>
     <script>
         // Function to update time data
         function updateTime() {
