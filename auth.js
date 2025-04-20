@@ -28,6 +28,17 @@ function getUserName() {
     return emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
 }
 
+function getUserDob() {
+    return localStorage.getItem('userDob');
+    // const storedDob = localStorage.getItem('userDob');
+
+    // if (storedDob) {
+    //     return storedDob;
+    // } else {
+    //     return "No Date of Birth on file.";
+    // }
+}
+
 // Get user's initial from their email or name
 function getUserInitial() {
     const userName = localStorage.getItem('userName');

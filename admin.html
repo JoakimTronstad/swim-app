@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Swimming Statistics DB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            color: #2a3b4c;
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .user-table th, .user-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .user-table th {
+            background-color: #2a7da1;
+            color: white;
+        }
+        
+        .user-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-btn {
+            background-color: #4cd4ca;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .delete-btn {
+            background-color: #ff6b6b;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .no-users {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            font-style: italic;
+        }
+        
+        .password-hidden {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .db-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f7fa;
+            border-radius: 5px;
+        }
+        
+        .db-name {
+            font-weight: bold;
+            color: #2a7da1;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+            margin-top: 10px;
+        }
+        
+        .user-detail {
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #4cd4ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Admin</h1>
+        
+        <div class="db-info">
+            <div>Database: <span class="db-name" id="dbName">Loading...</span></div>
+            <div>Version: <span id="dbVersion">Loading...</span></div>
+            <div>Status: <span id="dbStatus">Connecting...</span></div>
+            <div>Number of users: <span id="userCount">0</span></div>
+        </div>
+        
+        <div class="controls">
+            <button id="refreshBtn" class="action-btn">Refresh Data</button>
+            <button id="togglePasswordsBtn" class="action-btn">Show Passwords</button>
+        </div>
+        
+        <div id="userTableContainer">
+            <table class="user-table" id="userTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Registration Date</th>
+                        <th>Last Login</th>
+                        <th>Password</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User data will be populated here -->
+                </tbody>
+            </table>
+            <div id="noUsersMessage" class="no-users">No users found in the database.</div>
+        </div>
+        
+        <div id="userDetail" class="user-detail" style="display: none;">
+            <h3>User Details</h3>
+            <pre id="userDetailJson"></pre>
+        </div>
+    </div>
+    
+    <script src="database.js"></script>
+    <script>
+        let showPasswords = false;
+        
+        // Function to format a date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString();
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        // Function to load and display users
+        function loadUsers() {
+            const userTableBody = document.getElementById('userTableBody');
+            const noUsersMessage = document.getElementById('noUsersMessage');
+            const userCount = document.getElementById('userCount');
+            
+            // Check if getAllUsers function exists
+            if (typeof getAllUsers !== 'function') {
+                document.getElementById('dbStatus').textContent = 'Error: Database module not loaded correctly';
+                return;
+            }
+            
+            getAllUsers()
+                .then(users => {
+                    userTableBody.innerHTML = '';
+                    
+                    if (users.length === 0) {
+                        noUsersMessage.style.display = 'block';
+                        userCount.textContent = '0';
+                        return;
+                    }
+                    
+                    noUsersMessage.style.display = 'none';
+                    userCount.textContent = users.length;
+                    
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        
+                        // Email
+                        const emailCell = document.createElement('td');
+                        emailCell.textContent = user.email;
+                        row.appendChild(emailCell);
+                        
+                        // Name
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = `${user.firstName} ${user.lastName}`;
+                        row.appendChild(nameCell);
+                        
+                        // DOB
+                        const dobCell = document.createElement('td');
+                        dobCell.textContent = user.dob || 'N/A';
+                        row.appendChild(dobCell);
+                        
+                        // Registration Date
+                        const regDateCell = document.createElement('td');
+                        regDateCell.textContent = formatDate(user.registrationDate);
+                        row.appendChild(regDateCell);
+                        
+                        // Last Login
+                        const lastLoginCell = document.createElement('td');
+                        lastLoginCell.textContent = formatDate(user.lastLogin);
+                        row.appendChild(lastLoginCell);
+                        
+                        // Password
+                        const passwordCell = document.createElement('td');
+                        if (showPasswords) {
+                            passwordCell.textContent = user.password;
+                        } else {
+                            passwordCell.textContent = '••••••••';
+                            passwordCell.classList.add('password-hidden');
+                        }
+                        row.appendChild(passwordCell);
+                        
+                        // Actions
+                        const actionsCell = document.createElement('td');
+                        
+                        // View details button
+                        const viewBtn = document.createElement('button');
+                        viewBtn.textContent = 'View';
+                        viewBtn.classList.add('action-btn');
+                        viewBtn.addEventListener('click', () => {
+                            showUserDetails(user);
+                        });
+                        actionsCell.appendChild(viewBtn);
+                        
+                        // Delete button
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.classList.add('action-btn', 'delete-btn');
+                        deleteBtn.addEventListener('click', () => {
+                            if (confirm(`Are you sure you want to delete the user ${user.email}?`)) {
+                                deleteUser(user.email)
+                                    .then(() => {
+                                        loadUsers(); // Reload the table
+                                    })
+                                    .catch(error => {
+                                        console.error('Error deleting user:', error);
+                                        alert('Failed to delete user: ' + error.message);
+                                    });
+                            }
+                        });
+                        actionsCell.appendChild(deleteBtn);
+                        
+                        row.appendChild(actionsCell);
+                        
+                        userTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    document.getElementById('dbStatus').textContent = 'Error: ' + error.message;
+                });
+        }
+        
+        // Function to show user details
+        function showUserDetails(user) {
+            const userDetail = document.getElementById('userDetail');
+            const userDetailJson = document.getElementById('userDetailJson');
+            
+            userDetailJson.textContent = JSON.stringify(user, null, 2);
+            userDetail.style.display = 'block';
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for database initialization
+            let dbInitInterval = setInterval(() => {
+                if (typeof db !== 'undefined' && db) {
+                    clearInterval(dbInitInterval);
+                    
+                    // Update database info
+                    document.getElementById('dbName').textContent = DB_NAME;
+                    document.getElementById('dbVersion').textContent = DB_VERSION;
+                    document.getElementById('dbStatus').textContent = 'Connected';
+                    
+                    // Load users
+                    loadUsers();
+                }
+            }, 500);
+            
+            // Set 10-second timeout for database connection
+            setTimeout(() => {
+                clearInterval(dbInitInterval);
+                if (typeof db === 'undefined' || !db) {
+                    document.getElementById('dbStatus').textContent = 'Error: Database connection timed out';
+                }
+            }, 10000);
+            
+            // Set up event listeners
+            document.getElementById('refreshBtn').addEventListener('click', loadUsers);
+            
+            document.getElementById('togglePasswordsBtn').addEventListener('click', function() {
+                showPasswords = !showPasswords;
+                this.textContent = showPasswords ? 'Hide Passwords' : 'Show Passwords';
+                loadUsers();
+            });
+        });
+    </script>
+</body>
+</html>

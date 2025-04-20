@@ -280,6 +280,7 @@ function handleSignup(event) {
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userEmail', user.email);
             localStorage.setItem('userName', `${user.firstName} ${user.lastName}`);
+            localStorage.setItem('userDob', user.dob);
             
             // Redirect to profile page
             window.location.href = 'profile.html';
