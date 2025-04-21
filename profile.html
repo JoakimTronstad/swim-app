@@ -288,7 +288,7 @@
                         <h2 id="userName">John Swimmer</h2>
                         <p id="userEmail">john@example.com</p>
                         <p id="userDob" class="user-dob">Born: January 1, 2000</p>
-                        <p id="joinedDate" class="joined-date">Member since: Apr 17, 2025</p>
+                        <p id="joinedDate" class="joined-date">Member since: Jan 1, 2000</p>
                     </div>
                     <div class="profile-actions">
                         <button>Edit Profile</button>
@@ -417,6 +417,7 @@
                         .then(userData => {
                             if (userData) {
                                 updateProfileWithUserData(userData);
+                                displayDobInfo(userData)
                             } else {
                                 // Fallback to basic info if user not found in database
                                 updateProfileWithBasicInfo();
@@ -433,7 +434,7 @@
             }
         });
         
-        // Update profile with full user data from database
+        // This function is responsible for updating profile information with data from the database
         function updateProfileWithUserData(userData) {
             // Update profile information
             const nameElement = document.getElementById('userName');
@@ -450,18 +451,82 @@
                 emailElement.textContent = userData.email;
             }
             
+            // Fix the DOB handling to properly display YYYY-MM-DD format
+            // if (dobElement && userData.dob) {
+            //     console.log('Raw DOB value:', userData.dob);
+                
+            //     try {
+            //         // Create a new date object from the DOB value
+            //         const dobDate = new Date(userData.dob);
+                    
+            //         // Check if the date is valid
+            //         if (!isNaN(dobDate.getTime())) {
+            //             const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            //             dobElement.textContent = `Born: ${dobDate.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'})}`;
+            //             // dobElement.textContent = `Born: ${userData.dob}`;
+
+
+            //             console.log('Formatted DOB:', dobElement.textContent);
+            //         } else {
+            //             // If direct parsing fails, try handling YYYY-MM-DD format manually
+            //             const dateParts = userData.dob.split('-');
+            //             if (dateParts.length === 3) {
+            //                 // YYYY-MM-DD format (month is 0-indexed in JavaScript Date)
+            //                 const year = parseInt(dateParts[0]);
+            //                 const month = parseInt(dateParts[1]) - 1;
+            //                 const day = parseInt(dateParts[2]);
+                            
+            //                 const manualDate = new Date(year, month, day);
+            //                 if (!isNaN(manualDate.getTime())) {
+            //                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            //                     dobElement.textContent = `Born: ${manualDate.toLocaleDateString('en-US', options)}`;
+            //                     console.log('Manually formatted DOB:', dobElement.textContent);
+            //                 } else {
+            //                     dobElement.textContent = `Born: ${userData.dob}`;
+            //                 }
+            //             } else {
+            //                 // Just show the raw string if we can't parse it
+            //                 dobElement.textContent = `Born: ${userData.dob}`;
+            //             }
+            //         }
+            //     } catch (e) {
+            //         console.error('Error formatting DOB:', e);
+            //         dobElement.textContent = `Born: ${userData.dob}`;
+            //     }
+            // } else if (dobElement) {
+            //     dobElement.textContent = 'Born: Not specified';
+            // }
+
             if (dobElement && userData.dob) {
-                // Format date of birth
-                const dobDate = new Date(userData.dob);
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                dobElement.textContent = `Born: ${dobDate.toLocaleDateString('en-US', options)}`;
+                try {
+                    const dobDate = new Date(userData.dob);
+                    if (!isNaN(dobDate.getTime())) {
+                        const directFormattedDob = dobDate.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+                        dobElement.textContent = `Born: ${directFormattedDob}`;
+                        console.log('Formatted DOB:', dobElement.textContent);
+                    } else {
+                        dobElement.textContent = `Born: ${userData.dob} (invalid date format)`;
+                    }
+                } catch (e) {
+                    console.error('Error formatting DOB:', e);
+                    dobElement.textContent = `Born: ${userData.dob}`;
+                }
             }
             
             if (joinedDateElement && userData.registrationDate) {
                 // Format registration date
-                const regDate = new Date(userData.registrationDate);
-                const options = { year: 'numeric', month: 'short', day: 'numeric' };
-                joinedDateElement.textContent = `Member since: ${regDate.toLocaleDateString('en-US', options)}`;
+                try {
+                    const regDate = new Date(userData.registrationDate);
+                    if (!isNaN(regDate.getTime())) {
+                        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                        joinedDateElement.textContent = `Member since: ${regDate.toLocaleDateString('en-US', options)}`;
+                    } else {
+                        joinedDateElement.textContent = `Member since: ${userData.registrationDate}`;
+                    }
+                } catch (e) {
+                    console.error('Error formatting registration date:', e);
+                    joinedDateElement.textContent = `Member since: ${userData.registrationDate}`;
+                }
             }
             
             if (profilePicture) {
@@ -474,10 +539,13 @@
         function updateProfileWithBasicInfo() {
             const userName = getUserName();
             const userEmail = getUserEmail();
+            const userDob = getUserDob();
             
             const nameElement = document.getElementById('userName');
             const emailElement = document.getElementById('userEmail');
             const profilePicture = document.getElementById('profilePicture');
+            const dobElement = document.getElementById('userDob');
+
             
             if (nameElement && userName) {
                 nameElement.textContent = userName;
@@ -485,6 +553,10 @@
             
             if (emailElement && userEmail) {
                 emailElement.textContent = userEmail;
+            }
+
+            if (dobElement && userDob) {
+                dobElement.textContent = userDob;
             }
             
             if (profilePicture) {
