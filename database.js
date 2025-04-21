@@ -27,6 +27,7 @@ function initDB() {
                 userStore.createIndex('email', 'email', { unique: true });
                 userStore.createIndex('firstName', 'firstName', { unique: false });
                 userStore.createIndex('lastName', 'lastName', { unique: false });
+                userStore.createIndex('dob', 'dob', { unique: false });
                 console.log('Users store created');
             }
         };
